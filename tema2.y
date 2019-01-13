@@ -51,7 +51,7 @@ public:
 	void add_simbol(char *name)
 	{
 		simbols_table *aux=new simbols_table(name);
-		if(simbols_table::head==NULL)
+		if(!simbols_table::head)
 		{
 			simbols_table::head=aux;
 			simbols_table::tail=aux;
@@ -141,11 +141,11 @@ dec:
 	id_list ':' type
 	{
 		char *name=strtok($1, "&");
-		while(name!=NULL)
+		while(name)
 		{
 			if(mytable->head!=NULL)
 			{
-				if(mytable->found_simbol(name)==1)
+				if(mytable->found_simbol(name))
 				{
 					yyerror(mesage_err);
 					printf(" %s:  \e[1;31mMultiple declaration of variable!\n\e[0m", name);
@@ -198,7 +198,7 @@ stmt:
 assign:
 	TOKEN_ID TOKEN_ASSIGN exp
 	{
-		if(mytable->found_simbol($1)==0)
+		if(!mytable->found_simbol($1))
 		{
 			yyerror(mesage_err);
 			printf(" %s:  \e[1;31mVariable undeclared!\n\e[0m", $1);
@@ -224,7 +224,7 @@ term:
 	|
 	term TOKEN_DIVIDE factor
 	{
-		if(strcmp($3,"0")==0)
+		if(!strcmp($3,"0"))
 		{
 			yyerror(mesage_err);
 			printf(" %s %s %s:  \e[1;31mDevide to zero!\n\e[0m",$1,"DIV", $3);
@@ -244,7 +244,7 @@ factor:
 	{
 		char *name=$1;
 		
-		if(mytable->found_simbol(name)==0)
+		if(!mytable->found_simbol(name))
 		{
 			yyerror(mesage_err);
 			printf(" %s:  \e[1;31mVariable undeclared!\n\e[0m", name);
@@ -342,7 +342,7 @@ body:
 int main()
 {
 	yyparse();
-	if(OKstatus==1)
+	if(OKstatus)
 	{
 		printf("\e[1;32mAnalysis didn't return error! :)\n\e[0m");
 	}
